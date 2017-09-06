@@ -23,7 +23,42 @@ startTime = datetime.now()
 
 print('open file and read line by line')
 l = 0
-content = {}
+content = {
+    "Bewegungsnotation": 0,
+    "Computerdaten": 0,
+    "Computerprogramm": 0,
+    "Gera\u0308usche": 0,
+    "Illustrationen": 0,
+    "Noten": 0,
+    "Sonstige": 0,
+    "Text": 0,
+    #"Text$b": 13,
+    #"Text$txt": 0,
+    "Texto (visual)": 0,
+    "aufgefu\u0308hrte Musik": 0,
+    #"aufgeführte Musik$b": 0,
+    "dreidimensionale Form": 0,
+    "dreidimensionales bewegtes Bild": 0,
+    "gesprochenes Wort": 0,
+    "kartografische dreidimensionale Form": 0,
+    "kartografischer Datensatz": 0,
+    "kartografisches Bild": 0,
+    "kartografisches bewegtes Bild": 0,
+    #"nicht spezifiziert": 286,
+    #"st": 0,
+    #"sti": 11,
+    #"still image": 0,
+    "taktile dreidimensionale Form": 0,
+    "taktiler Text": 0,
+    "taktiles Bild": 0,
+    #"text": 9,
+    #"text$2": 1,
+    #"txt": 0,
+    #"unbewegtes Bil": 0,
+    "unbewegtes Bild": 0,
+    #"unbewegtes Bild$b": 0,
+    "zweidimensionales bewegtes Bild": 0
+}
 
 with open('data/bib-records.json') as f:
     for line in f:
@@ -45,7 +80,7 @@ with open('data/bib-records.json') as f:
                     try:
                         content[inh['a']]
                     except KeyError:
-                        content[inh['a']] = 1
+                        pass
                     else:
                         content[inh['a']] += 1
 
