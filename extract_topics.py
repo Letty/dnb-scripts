@@ -2,6 +2,7 @@
 import json
 from datetime import datetime
 import sys
+import util
 
 
 def seq_iter(obj):
@@ -39,6 +40,7 @@ with open('export/bib-records-reduced.json') as f:
         # 1.066.192 ['045C'] 2. + 3.maschinell vergebene Sachgruppen
         # 4.647.455 ['045E'] Sachgruppen der Deutschen Nationalbibliografie
         #   110.813 ['045G'] DDC-Notation: Vollständige Notation
+
         # 2.621.471 ['041A']      1.Schlagwortfolge 1.Element
         # 2.355.042 ['041A/01']   1.Schlagwortfolge 2.Element
         # 1.556.937 ['041A/02']   1.Schlagwortfolge 3.Element
@@ -46,8 +48,7 @@ with open('export/bib-records-reduced.json') as f:
         # 1.752.704 ['041A/08']  Vorgegebene(s) Permutationsmuster zur 1. Schlagwortfolge
         # 2.625.849 ['041A/09']  Angaben zur 1. Schlagwortfolge
 
-        topic_ids = ['044F', '044H', '044K', '045C', '045E', '045G',
-                     '041A', '041A/01', '041A/02', '041A/03', '041A/08', '041A/09']
+        topic_ids = ['044F', '044H', '044K', '045C', '045E', '045G']
 
         # temporäre Datenstruktur für Themen, damit keine Doppelaufführung
         # stattfindet
@@ -67,19 +68,32 @@ with open('export/bib-records-reduced.json') as f:
                         if tj[0] == '\"' or tj[0] == ' ':
                             break
 
-                        try:
-                            topics[tj]
-                        except KeyError:
-                            topics[tj] = 1
-                        else:
-                            topics[tj] += 1
+                        util.checkArray(curren_topics, tj)
+                        # try:
+                        #     topics[tj]
+                        # except KeyError:
+                        #     topics[tj] = 1
+                        # else:
+                        #     topics[tj] += 1
 
-                # Wie geh ich hier mit komischen Abkürzungen um? ggf einfach
-                # ignorieren und in Text umwandeln?
-                # Die DDC und GND Coding Liste müsste man dafür aufschlüsseln
-                # -.-
+        util.findKeywords(curren_topics, entry, '041A')
+        util.findKeywords(curren_topics, entry, '041A/01')
+        util.findKeywords(curren_topics, entry, '041A/02')
+        util.findKeywords(curren_topics, entry, '041A/08')
+        util.findKeywords(curren_topics, entry, '041A/09')
 
-                # Building string as id für allocation structure
+        # Wie geh ich hier mit komischen Abkürzungen um? ggf einfach
+        # ignorieren und in Text umwandeln?
+        # Die DDC und GND Coding Liste müsste man dafür aufschlüsseln
+        # -.-
+
+        for cp in curren_topics:
+            try:
+                topics[cp]
+            except KeyError:
+                topics[cp] = 1
+            else:
+                topics[cp] += 1
 
         uptime = str(datetime.now() - startTime).split('.')[0]
         l += 1
