@@ -13,22 +13,22 @@ def findKeywords(array, data, id):
                 checkArray(array, ki['a'][0])
 
 
-def checkField(data, ids, subfield, array):
+def checkField(data, id, subfields, array):
     try:
         data[id]
     except KeyError:
         pass
     else:
         for ti in data[id]:
-            for i in ids:
+            for i in subfields:
                 try:
                     ti[i]
                 except KeyError:
                     pass
                 else:
                     for tj in ti[i]:
-                        if tj[0] == '\"' or tj[0] == ' ':
-                            break
+                        # if tj[0] == '\"' or tj[0] == ' ':
+                        #     break
 
                         checkArray(array, tj)
 
