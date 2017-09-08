@@ -40,7 +40,6 @@ with open('export/bib-records-reduced.json') as f:
         # 1.066.192 ['045C'] 2. + 3.maschinell vergebene Sachgruppen
         # 4.647.455 ['045E'] Sachgruppen der Deutschen Nationalbibliografie
         #   110.813 ['045G'] DDC-Notation: Vollständige Notation
-
         # 2.621.471 ['041A']      1.Schlagwortfolge 1.Element
         # 2.355.042 ['041A/01']   1.Schlagwortfolge 2.Element
         # 1.556.937 ['041A/02']   1.Schlagwortfolge 3.Element
@@ -48,46 +47,30 @@ with open('export/bib-records-reduced.json') as f:
         # 1.752.704 ['041A/08']  Vorgegebene(s) Permutationsmuster zur 1. Schlagwortfolge
         # 2.625.849 ['041A/09']  Angaben zur 1. Schlagwortfolge
 
-        topic_ids = ['044F', '044H', '044K', '045C', '045E', '045G']
-
         # temporäre Datenstruktur für Themen, damit keine Doppelaufführung
         # stattfindet
-        curren_topics = []
-        try:
-            entry['044N']
-        except KeyError:
-            pass
-        else:
-            for ti in entry['044N']:
-                try:
-                    ti['a']
-                except KeyError:
-                    pass
-                else:
-                    for tj in ti['a']:
-                        if tj[0] == '\"' or tj[0] == ' ':
-                            break
+        current_topics = []
 
-                        util.checkArray(curren_topics, tj)
-                        # try:
-                        #     topics[tj]
-                        # except KeyError:
-                        #     topics[tj] = 1
-                        # else:
-                        #     topics[tj] += 1
+        util.checkField(entry, '044N', ['a'], current_topics)
+        util.checkField(entry, '044H', ['a'], current_topics)
+        util.checkField(entry, '044K', ['a'], current_topics)
+        util.checkField(entry, '045G', ['a'], current_topics)
+        util.checkField(entry, '044F', ['a', 'f'], current_topics)
+        util.checkField(entry, '045C', ['f', 'g'], current_topics)
+        util.checkField(entry, '045E', ['e', 'h'], current_topics)
 
-        util.findKeywords(curren_topics, entry, '041A')
-        util.findKeywords(curren_topics, entry, '041A/01')
-        util.findKeywords(curren_topics, entry, '041A/02')
-        util.findKeywords(curren_topics, entry, '041A/08')
-        util.findKeywords(curren_topics, entry, '041A/09')
+        util.findKeywords(current_topics, entry, '041A')
+        util.findKeywords(current_topics, entry, '041A/01')
+        util.findKeywords(current_topics, entry, '041A/02')
+        util.findKeywords(current_topics, entry, '041A/03')
+        util.findKeywords(current_topics, entry, '041A/08')
+        util.findKeywords(current_topics, entry, '041A/09')
 
         # Wie geh ich hier mit komischen Abkürzungen um? ggf einfach
         # ignorieren und in Text umwandeln?
         # Die DDC und GND Coding Liste müsste man dafür aufschlüsseln
-        # -.-
 
-        for cp in curren_topics:
+        for cp in current_topics:
             try:
                 topics[cp]
             except KeyError:
@@ -109,5 +92,6 @@ for key in seq_iter(topics):
     if topics[key] > 5:
         t[key] = topics[key]
 
+
 with open('export/topics.json', mode='w') as fi:
-    fi.write(json.dumps(t, indent='\t', sort_keys='true'))
+    fi.write(json.dumps(t, indent=1, sort_keys=True))
