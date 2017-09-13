@@ -2,6 +2,7 @@
 import json
 from datetime import datetime
 import sys
+import util
 
 
 def seq_iter(obj):
@@ -43,9 +44,10 @@ with open('export/bib-records-reduced.json') as f:
                 try:
                     authors[entry['028A'][0]['9']]
                 except KeyError:
-                    authors[entry['028A'][0]['9']] = 1
+                    authors[entry['028A'][0]['9']] = {'count': 1,
+                                                      'name': util.extractAuthorName(entry['028A'][0])}
                 else:
-                    authors[entry['028A'][0]['9']] += 1
+                    authors[entry['028A'][0]['9']]['count'] += 1
 
         uptime = str(datetime.now() - startTime).split('.')[0]
         l += 1
