@@ -26,11 +26,12 @@ def checkField(data, id, subfields, array):
                 except KeyError:
                     pass
                 else:
-                    for tj in ti[i]:
-                        # if tj[0] == '\"' or tj[0] == ' ':
-                        #     break
+                    if isinstance(ti[i], list):
+                        for tj in ti[i]:
+                            checkArray(array, tj)
 
-                        checkArray(array, tj)
+                    else:
+                        checkArray(array, ti[i])
 
 
 def checkArray(array, value):
@@ -38,3 +39,19 @@ def checkArray(array, value):
         array.index(value)
     except ValueError:
         array.append(value)
+
+
+def extractAuthorName(field):
+    name = ''
+
+    try:
+        name += field['a']
+    except KeyError:
+        pass
+
+    try:
+        name += ' ' + field['d']
+    except KeyError:
+        pass
+
+    return name
