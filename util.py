@@ -13,7 +13,7 @@ def findKeywords(array, data, id):
                 checkArray(array, ki['a'][0])
 
 
-def checkField(data, id, subfields, array):
+def checkField(data, id, subfields, array, lookuptable):
     try:
         data[id]
     except KeyError:
@@ -21,6 +21,7 @@ def checkField(data, id, subfields, array):
     else:
         for ti in data[id]:
             for i in subfields:
+
                 try:
                     ti[i]
                 except KeyError:
@@ -28,10 +29,19 @@ def checkField(data, id, subfields, array):
                 else:
                     if isinstance(ti[i], list):
                         for tj in ti[i]:
-                            checkArray(array, tj)
+                            name = ''
+                            if lookuptable:
+                                name = lookuptable[tj]
+                            checkArray(array, name)
 
                     else:
-                        checkArray(array, ti[i])
+                        name = ti[i]
+                        if lookuptable:
+                            try:
+                                name = lookuptable[ti[i]]
+                            except KeyError:
+                                pass
+                        checkArray(array, name)
 
 
 def checkArray(array, value):
@@ -55,3 +65,7 @@ def extractAuthorName(field):
         pass
 
     return name
+
+
+def seq_iter(obj):
+    return obj if isinstance(obj, dict) else range(len(obj))
