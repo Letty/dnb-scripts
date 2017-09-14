@@ -42,12 +42,12 @@ with open('export/bib-records-reduced.json') as f:
                 pass
             else:
                 try:
-                    authors[entry['028A'][0]['9']]
+                    authors[entry['028A'][0]['9'].lower()]
                 except KeyError:
-                    authors[entry['028A'][0]['9']] = {'count': 1,
-                                                      'name': util.extractAuthorName(entry['028A'][0])}
+                    authors[entry['028A'][0]['9'].lower()] = {'count': 1,
+                                                              'name': util.extractAuthorName(entry['028A'][0])}
                 else:
-                    authors[entry['028A'][0]['9']]['count'] += 1
+                    authors[entry['028A'][0]['9'].lower()]['count'] += 1
 
         uptime = str(datetime.now() - startTime).split('.')[0]
         l += 1
