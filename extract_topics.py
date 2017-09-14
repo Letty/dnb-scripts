@@ -57,7 +57,7 @@ with open('export/bib-records-reduced.json') as f:
         util.checkField(entry, '045G', ['a'], current_topics)
         util.checkField(entry, '044F', ['a', 'f'], current_topics)
         util.checkField(entry, '045C', ['f', 'g'], current_topics)
-        util.checkField(entry, '045E', ['e', 'h'], current_topics)
+        util.checkField(entry, '045E', ['e'], current_topics)
 
         util.findKeywords(current_topics, entry, '041A')
         util.findKeywords(current_topics, entry, '041A/01')
