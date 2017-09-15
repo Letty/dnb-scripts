@@ -5,10 +5,6 @@ import sys
 import util
 
 
-def seq_iter(obj):
-    return obj if isinstance(obj, dict) else range(len(obj))
-
-
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'

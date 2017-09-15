@@ -69,7 +69,7 @@ try:
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
     connection.commit()
-    print('create table dnb_keyword')
+    print('create table dnb_reduced_author_count')
 
     print('open file and read line by line')
     i = 0
