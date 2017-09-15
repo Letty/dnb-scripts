@@ -55,12 +55,12 @@ def extractAuthorName(field):
     name = ''
 
     try:
-        name += field['a']
+        name += field['d']
     except KeyError:
         pass
 
     try:
-        name += ' ' + field['d']
+        name += ' ' + field['a']
     except KeyError:
         pass
 
