@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 import sys
 import util
+import lookuptables
 
 
 def seq_iter(obj):
@@ -51,13 +52,14 @@ with open('export/bib-records-reduced.json') as f:
         # stattfindet
         current_topics = []
 
-        util.checkField(entry, '044N', ['a'], current_topics)
-        util.checkField(entry, '044H', ['a'], current_topics)
-        util.checkField(entry, '044K', ['a'], current_topics)
-        util.checkField(entry, '045G', ['a'], current_topics)
-        util.checkField(entry, '044F', ['a', 'f'], current_topics)
-        util.checkField(entry, '045C', ['f', 'g'], current_topics)
-        util.checkField(entry, '045E', ['e'], current_topics)
+        util.checkField(entry, '044N', ['a'], current_topics, False)
+        util.checkField(entry, '044H', ['a'], current_topics, False)
+        util.checkField(entry, '044K', ['a'], current_topics, False)
+        util.checkField(entry, '045G', ['a'], current_topics, False)
+        util.checkField(entry, '044F', ['a', 'f'], current_topics, False)
+        util.checkField(entry, '045C', ['f', 'g'], current_topics, False)
+        util.checkField(entry, '045E', ['e'],
+                        current_topics, lookuptables.lookupSachgruppe)
 
         util.findKeywords(current_topics, entry, '041A')
         util.findKeywords(current_topics, entry, '041A/01')
