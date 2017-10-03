@@ -33,10 +33,10 @@ try:
     # drop table
     with connection.cursor() as cursor:
 
-        sql = "DROP TABLE IF EXISTS `dnb_reduced_topic_count`"
+        sql = "DROP TABLE IF EXISTS `dnb_topic_count`"
         cursor.execute(sql)
     connection.commit()
-    print('drop table dnb_reduced_topic_count')
+    print('drop table dnb_topic_count')
 
     # create table
     with connection.cursor() as cursor:
@@ -64,16 +64,16 @@ try:
         # array: verwandte begriffe (P a d n d c l) ['028R'] Person - Beziehung
         # verwandte begriffe (a n d c g b x) ['030R'] Konferenz - Beziehung
 
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_reduced_topic_count` (`id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT," \
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_topic_count` (`id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT," \
               " `keyword` TEXT, count MEDIUMINT UNSIGNED, PRIMARY KEY(id)) " \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
     connection.commit()
-    print('create table dnb_reduced_topic_count')
+    print('create table dnb_topic_count')
 
     print('open file and read line by line')
     i = 0
-    with open('export/topics.json') as f:
+    with open('export/topics_22.json') as f:
         data = json.load(f)
 
         kw = []
@@ -86,7 +86,7 @@ try:
             with connection.cursor() as cursor:
                 # Create a new record
                 i += 1
-                sql = "INSERT INTO `dnb_reduced_topic_count` (`keyword`, `count` ) " \
+                sql = "INSERT INTO `dnb_topic_count` (`keyword`, `count` ) " \
                       "VALUES (%s, %s)"
                 try:
                     cursor.execute(sql, (keyword, count))

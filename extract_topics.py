@@ -28,7 +28,8 @@ l = 0
 # Year - Author (name) - Author (id) - topics
 topics = {}
 
-with open('export/bib-records-reduced.json') as f:
+with open('data/bib-records.json') as f:
+    # with open('export/bib-records-reduced.json') as f:
     for line in f:
         entry = json.loads(line)
 
@@ -95,5 +96,5 @@ for key in seq_iter(topics):
         t[key] = topics[key]
 
 
-with open('export/topics.json', mode='w') as fi:
+with open('export/topics_22.json', mode='w') as fi:
     fi.write(json.dumps(t, indent=1, sort_keys=True))
