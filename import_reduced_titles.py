@@ -54,6 +54,7 @@ connection = pymysql.connect(host='127.0.0.1',
                              cursorclass=pymysql.cursors.DictCursor)
 
 print('\n Connection to database established')
+topics_without_ids = []
 
 try:
 
@@ -315,6 +316,31 @@ try:
                                 print('\n \n error in insert dnb_author_item')
                                 print(entry)
                         i += 1
+
+            topic_ids = []
+            for k in keywords:
+                with connection.cursor() as cursor:
+                    # Create a new record
+                    sql = "select `id` from `dnb_topic_count` where `keyword`=%s"
+                    cursor.execute(sql, (k))
+                    r = cursor.fetchone()
+                    if r == None:
+                        topics_without_ids.append(k)
+                    else:
+                        topic_ids.append(r['id'])
+
+            for t in topic_ids:
+                with connection.cursor() as cursor:
+                    # Create a new record
+                    sql = "INSERT INTO `dnb_item_topic` (`i_id`, `t_id`, `year`) " \
+                          "VALUES (%s, %s, %s)"
+
+                    try:
+                        cursor.execute(sql, (id_, t, year))
+                    # except pymysql.err.InternalError:
+                    except:
+                        print('\n \n error in insert dnb_item_item')
+                        print(sys.exc_info()[0])
 
             connection.commit()
             uptime = str(datetime.now() - startTime).split('.')[0]
