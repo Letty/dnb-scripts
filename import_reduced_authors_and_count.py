@@ -26,17 +26,16 @@ connection = pymysql.connect(host='127.0.0.1',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-print('\n Connection to database established')
+print('Connection to database established')
 
 try:
 
     # drop table
     with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_reduced_author_count`"
+        sql = "DROP TABLE IF EXISTS `dnb_author_count`"
         cursor.execute(sql)
     connection.commit()
-    print('drop table dnb_reduced_author_count')
+    print('drop table dnb_author_count')
 
     # create table
     with connection.cursor() as cursor:
@@ -64,45 +63,47 @@ try:
         # array: verwandte begriffe (P a d n d c l) ['028R'] Person - Beziehung
         # verwandte begriffe (a n d c g b x) ['030R'] Konferenz - Beziehung
 
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_reduced_author_count` (`id`  varchar(13) NOT NULL," \
-              " `name` MEDIUMTEXT, count MEDIUMINT UNSIGNED, PRIMARY KEY(id)) " \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_count` (`id`  varchar(13) NOT NULL," \
+              " `name` MEDIUMTEXT, `lastname` MEDIUMTEXT, date_of_birth varchar(50), date_of_death varchar(50), " \
+              + "count MEDIUMINT UNSIGNED, PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
+
     connection.commit()
-    print('create table dnb_reduced_author_count')
+    print('create table dnb_author_count')
 
     print('open file and read line by line')
-    i = 0
-    with open('export/authors.json') as f:
+
+    with open('export/authors_22.json') as f:
         data = json.load(f)
 
         author = []
         for key in util.seq_iter(data):
-            author.append([key, data[key]['name'], data[key]['count']])
-
+            author.append([key, data[key]['name'],
+                           data[key]['lastname'], data[key]['count']])
+        i = 0
         for k in author:
             id_ = k[0]
             name = k[1]
-            count = k[2]
+            lastname = k[2]
+            count = k[3]
             with connection.cursor() as cursor:
                 # Create a new record
-                i += 1
-                sql = "INSERT INTO `dnb_reduced_author_count` (`id`, `name`, `count` ) " \
-                      "VALUES (%s, %s, %s)"
+                sql = "INSERT INTO `dnb_author_count` (`id`, `name`, `lastname`, `count` ) " \
+                      "VALUES (%s, %s, %s,%s)"
                 try:
-                    cursor.execute(sql, (id_, name, count))
+                    cursor.execute(sql, (id_, name, lastname, count))
                 except:
                     print('\n \n')
                     print(k)
 
-                connection.commit()
-                uptime = str(datetime.now() - startTime).split('.')[0]
-                i += 1
-                # sys.stdout.write('\033[2J\033[1;1H') # cleans complete screen
-                sys.stdout.write('\033[K\033[1;1H')  # cleans line
-                sys.stdout.write(
-                    'File processing %s %ss %s  proccessed lines %i' % (bcolors.OKBLUE, uptime, bcolors.ENDC, i))
-                sys.stdout.flush()
+            connection.commit()
+            uptime = str(datetime.now() - startTime).split('.')[0]
+            i += 1
+            # sys.stdout.write('\033[2J\033[1;1H') # cleans complete screen
+            sys.stdout.write('\033[K\033[1;1H')  # cleans line
+            sys.stdout.write(
+                'File processing %s %ss %s  proccessed lines %i' % (bcolors.OKBLUE, uptime, bcolors.ENDC, i))
+            sys.stdout.flush()
 
     print('\n finished loading dataset')
 
