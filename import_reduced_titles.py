@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pymysql.cursors
 import json
+import re
 from datetime import datetime
 import sys
 import util
@@ -9,6 +10,14 @@ import lookuptables
 
 def seq_iter(obj):
     return obj if isinstance(obj, dict) else range(len(obj))
+
+
+def getYear(st):
+    p = re.findall('(\d{4})', st)
+    if (len(p) == 0):
+        return 0
+    else:
+        return int(p[0])
 
 
 class bcolors:
@@ -35,29 +44,137 @@ print('\n Connection to database established')
 
 try:
 
+    #######
+    # dnb_item
+    #######
     # drop table
     with connection.cursor() as cursor:
 
-        sql = "DROP TABLE IF EXISTS `dnb_reduced_title`"
+        sql = "DROP TABLE IF EXISTS `dnb_item`"
         cursor.execute(sql)
     connection.commit()
-    print('drop table dnb_reduced_title')
+    print('drop table dnb_item')
 
     # create table
     with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_reduced_title` (`key_id` varchar(12) NOT NULL," \
-              " `title` longtext, `title_add` longtext, `year` char(35), `year_end` char(35)," \
-              " `author_firstname` varchar(200), `author_lastname` varchar(200)," \
-              " `author_gndid` varchar(20), `keywords` longtext)" \
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_item` (`id` varchar(12) NOT NULL," \
+              " `title` text, `title_add` text, `year` smallint unsigned, " \
+              " `toc` text, publisher text, primary key (id), index (year) )" \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
 
     connection.commit()
-    print('create table dnb_title')
+    print('create table dnb_item')
+
+    #######
+    # dnb_author_item
+    #######
+    # drop table
+    with connection.cursor() as cursor:
+
+        sql = "DROP TABLE IF EXISTS `dnb_author_item`"
+        cursor.execute(sql)
+    connection.commit()
+    print('drop table dnb_author_item')
+    # create table
+    with connection.cursor() as cursor:
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_item` (`a_id` varchar(12) NOT NULL," \
+              " `i_id` varchar(12) NOT NULL, `year` smallint unsigned, " \
+              " primary key (a_id, i_id), index (year) )" \
+              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        cursor.execute(sql)
+
+    connection.commit()
+    print('create table dnb_author_item')
+
+    #######
+    # dnb_item_topic
+    #######
+    # drop table
+    with connection.cursor() as cursor:
+
+        sql = "DROP TABLE IF EXISTS `dnb_item_topic`"
+        cursor.execute(sql)
+    connection.commit()
+    print('drop table dnb_item_topic')
+    # create table
+    with connection.cursor() as cursor:
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_item_topic` (`i_id` varchar(12) NOT NULL," \
+              " `t_id` MEDIUMINT UNSIGNED NOT NULL, `year` smallint unsigned, " \
+              " primary key (i_id, t_id), index (year) )" \
+              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        cursor.execute(sql)
+
+    connection.commit()
+    print('create table dnb_item_topic')
+
+    #######
+    # dnb_author_topic
+    #######
+    # drop table
+    with connection.cursor() as cursor:
+
+        sql = "DROP TABLE IF EXISTS `dnb_author_topic`"
+        cursor.execute(sql)
+    connection.commit()
+    print('drop table dnb_author_topic')
+    # create table
+    with connection.cursor() as cursor:
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_topic` (`a_id` varchar(12) NOT NULL," \
+              " `t_id` MEDIUMINT UNSIGNED NOT NULL, `count` mediumint unsigned, " \
+              " primary key (a_id, t_id))" \
+              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        cursor.execute(sql)
+
+    connection.commit()
+    print('create table dnb_author_topic')
+
+    #######
+    # dnb_topic_topic
+    #######
+    # drop table
+    with connection.cursor() as cursor:
+
+        sql = "DROP TABLE IF EXISTS `dnb_topic_topic`"
+        cursor.execute(sql)
+    connection.commit()
+    print('drop table dnb_topic_topic')
+    # create table
+    with connection.cursor() as cursor:
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_topic_topic` (`t_id1` MEDIUMINT UNSIGNED NOT NULL," \
+              " `t_id2` MEDIUMINT UNSIGNED NOT NULL, `count` mediumint unsigned, " \
+              " primary key (t_id1, t_id2))" \
+              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        cursor.execute(sql)
+
+    connection.commit()
+    print('create table dnb_topic_topic')
+
+    #######
+    # dnb_author_author
+    #######
+    # drop table
+    with connection.cursor() as cursor:
+
+        sql = "DROP TABLE IF EXISTS `dnb_author_author`"
+        cursor.execute(sql)
+    connection.commit()
+    print('drop table dnb_author_author')
+    # create table
+    with connection.cursor() as cursor:
+        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_author` (`a_id1` varchar(12) NOT NULL," \
+              " `a_id2` varchar(12) NOT NULL, `count` mediumint unsigned, " \
+              " primary key (a_id1, a_id2))" \
+              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        cursor.execute(sql)
+
+    connection.commit()
+    print('create table dnb_topic_topic')
 
     print('open file and read line by line')
     l = 0
-    with open('export/bib-records-reduced.json') as f:
+    with open('data/bib-records.json') as f:
+        # with open('export/bib-records-reduced.json') as f:
         for line in f:
             entry = json.loads(line)
 
@@ -81,27 +198,24 @@ try:
             #   1.752.704 ['041A/08']  Vorgegebene(s) Permutationsmuster zur 1. Schlagwortfolge
             #   2.625.849 ['041A/09']  Angaben zur 1. Schlagwortfolge
 
-            id = entry['003@'][0]['0'].lower()
+            id_ = entry['003@'][0]['0'].lower()
 
-            vo = ''
-            vj = ''
+            pub_year = ''
 
             try:
                 entry['011E']
             except KeyError:
                 try:
-                    vo = entry['011@'][0]['a']
-                except KeyError:
-                    pass
-                try:
-                    vj = entry['011@'][0]['b']
+                    pub_year = entry['011@'][0]['a']
                 except KeyError:
                     pass
             else:
                 try:
-                    vo = entry['011E'][0]['r']
+                    pub_year = entry['011E'][0]['r']
                 except KeyError:
                     pass
+
+            year = getYear(pub_year)
 
             title = ''
             tadd = ''
@@ -119,21 +233,28 @@ try:
                 except KeyError:
                     pass
 
-            # logisch, der erste Autor kann auch aus 3 Autoren bestehen..
-            # dh hier muss ich über ein Array gehen
-            name = ''
-            vorname = ''
-            author_id = ''
-            author_all = ''  # noch nicht in db
+            toc = ''
             try:
-                entry['028A']
+                entry['047I'][0]
             except KeyError:
                 pass
             else:
-                author_all = entry['028A']
-                name = entry['028A'][0].setdefault('a', '')
-                vorname = entry['028A'][0].setdefault('d', '')
-                author_id = entry['028A'][0].setdefault('9', '').lower()
+                try:
+                    toc = entry['047I'][0]['u']
+                except KeyError:
+                    pass
+
+            publisher = ''
+            try:
+                entry['033A']
+            except KeyError:
+                pass
+            else:
+                va = []
+                for i in entry['033A']:
+                    va.append({'name': i.setdefault('n', ''),
+                               'ort': i.setdefault('p', '')})
+                publisher = str(va)
 
             keywords = []
 
@@ -156,13 +277,12 @@ try:
             # ------------------------------------
             with connection.cursor() as cursor:
                 # Create a new record
-                sql = "INSERT INTO `dnb_reduced_title` (`key_id`, `title`, `title_add`, `year`, `year_end`, " \
-                      " `author_firstname`, `author_lastname`, `author_gndid`, `keywords`) " \
-                      "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql = "INSERT INTO `dnb_item` (`id`, `title`, `title_add`, `year`, `toc`, publisher) " \
+                      "VALUES (%s, %s, %s, %s, %s, %s)"
 
                 try:
                     cursor.execute(sql,
-                                   (id, title, tadd, vo, vj, vorname, name, author_id, str(keywords)))
+                                   (id_, title, tadd, year, toc, publisher))
                 # except pymysql.err.InternalError:
                 except:
                     print('\n \n')
