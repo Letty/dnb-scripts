@@ -8,16 +8,29 @@ import util
 import lookuptables
 
 
-def seq_iter(obj):
-    return obj if isinstance(obj, dict) else range(len(obj))
-
-
 def getYear(st):
     p = re.findall('(\d{4})', st)
     if (len(p) == 0):
         return 0
     else:
         return int(p[0])
+
+
+def getAuthorId(entry, fieldId, a_array):
+    try:
+        entry[fieldId]
+    except KeyError:
+        pass
+    else:
+        try:
+            entry[fieldId][0]['9']
+        except KeyError:
+            pass
+        else:
+            try:
+                a_array.append(entry[fieldId][0]['9'].lower())
+            except KeyError:
+                pass
 
 
 class bcolors:
@@ -178,26 +191,6 @@ try:
         for line in f:
             entry = json.loads(line)
 
-            #  16.564.763 ['003@'] Datensatz ID
-            #      73.470 ['011E'] Entstehungsdatum, sonstige Datumsangaben
-            #  15.623.024 ['011@'] Erscheinungsjahr
-            #  13.477.159 ['021A'] Hauptsachtitel, Zusätze, Parallelsachtitel, Verfasserangabe
-            #   8.675.529 ['028A'] 1.Verfasser
-            #     768.701 ['044F'] Schlagwörter aus Altdaten der Deutschen Nationalbibliothek
-            #     475.254 ['044G'] Literarische Gattung
-            #     143.756 ['044H'] Automatisch vergegebenes Schlagwort
-            #     259.970 ['044K'] GND-Schlagwörter
-            #   4.350.351 ['044N'] Deskriptoren aus einem Thesaurus
-            #   1.066.192 ['045C'] 2. + 3.maschinell vergebene Sachgruppen
-            #   4.647.455 ['045E'] Sachgruppen der Deutschen Nationalbibliografie
-            #     110.813 ['045G'] DDC-Notation: Vollständige Notation
-            #   2.621.471 ['041A']      1.Schlagwortfolge 1.Element
-            #   2.355.042 ['041A/01']   1.Schlagwortfolge 2.Element
-            #   1.556.937 ['041A/02']   1.Schlagwortfolge 3.Element
-            #     870.757 ['041A/03']   1.Schlagwortfolge 4.Element
-            #   1.752.704 ['041A/08']  Vorgegebene(s) Permutationsmuster zur 1. Schlagwortfolge
-            #   2.625.849 ['041A/09']  Angaben zur 1. Schlagwortfolge
-
             id_ = entry['003@'][0]['0'].lower()
 
             pub_year = ''
@@ -256,6 +249,10 @@ try:
                                'ort': i.setdefault('p', '')})
                 publisher = str(va)
 
+            author_ids = []
+            getAuthorId(entry, '028A', author_ids)
+            getAuthorId(entry, '028C', author_ids)
+
             keywords = []
 
             util.checkField(entry, '044N', ['a'], keywords, False)
@@ -281,12 +278,43 @@ try:
                       "VALUES (%s, %s, %s, %s, %s, %s)"
 
                 try:
-                    cursor.execute(sql,
-                                   (id_, title, tadd, year, toc, publisher))
+                    cursor.execute(
+                        sql, (id_, title, tadd, year, toc, publisher))
                 # except pymysql.err.InternalError:
                 except:
-                    print('\n \n')
+                    print('\n \n error in insert dnb_item')
                     print(entry)
+
+            for a_id in author_ids:
+                with connection.cursor() as cursor:
+                    # Create a new record
+                    sql = "INSERT INTO `dnb_author_item` (`a_id`, `i_id`, `year`) " \
+                          "VALUES (%s, %s, %s)"
+
+                    try:
+                        cursor.execute(sql, (a_id, id_, year))
+                    # except pymysql.err.InternalError:
+                    except:
+                        print('\n \n error in insert dnb_author_item')
+                        print(entry)
+
+            # nicht klar obs funzt
+            if len(author_ids) > 1:
+                index_a = 1
+                for a in author_ids:
+                    if i != len(author_ids) - 1:
+                        with connection.cursor() as cursor:
+                            # Create a new record
+                            sql = "INSERT INTO `dnb_author_author` (`a_id1`, `a_id2`, `count`) " \
+                                  "VALUES (%s, %s, %s)"
+
+                            try:
+                                cursor.execute(sql, (a, author_ids[i], 1))
+                            # except pymysql.err.InternalError:
+                            except:
+                                print('\n \n error in insert dnb_author_item')
+                                print(entry)
+                        i += 1
 
             connection.commit()
             uptime = str(datetime.now() - startTime).split('.')[0]
