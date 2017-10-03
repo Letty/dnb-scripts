@@ -309,7 +309,7 @@ try:
 
                 # nicht klar obs funzt
                 if len(author_ids) > 1:
-                    index_a = 1
+                    i = 1
                     for a in author_ids:
                         if i != len(author_ids) - 1:
                             with connection.cursor() as cursor:
@@ -378,7 +378,7 @@ try:
 
                                 # nicht klar obs funzt
                 if len(topic_ids) > 1:
-                    index_a = 1
+                    i = 1
                     for t in topic_ids:
                         if i != len(topic_ids) - 1:
                             with connection.cursor() as cursor:
