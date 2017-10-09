@@ -1,36 +1,10 @@
 # -*- coding: utf-8 -*-
 import pymysql.cursors
 import json
-import re
 from datetime import datetime
 import sys
 import util
 import lookuptables
-
-
-def getYear(st):
-    p = re.findall('(\d{4})', st)
-    if (len(p) == 0):
-        return 0
-    else:
-        return int(p[0])
-
-
-def getAuthorId(entry, fieldId, a_array):
-    try:
-        entry[fieldId]
-    except KeyError:
-        pass
-    else:
-        try:
-            entry[fieldId][0]['9']
-        except KeyError:
-            pass
-        else:
-            try:
-                a_array.append(entry[fieldId][0]['9'].lower())
-            except KeyError:
-                pass
 
 
 class bcolors:
@@ -80,328 +54,101 @@ try:
     connection.commit()
     print('create table dnb_item')
 
-    #######
-    # dnb_author_item
-    #######
-    # drop table
-    with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_author_item`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_author_item')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_item` (`a_id` varchar(12) NOT NULL," \
-              " `i_id` varchar(12) NOT NULL, `year` smallint unsigned, " \
-              " primary key (a_id, i_id), index (year) )" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
-
-    connection.commit()
-    print('create table dnb_author_item')
-
-    #######
-    # dnb_item_topic
-    #######
-    # drop table
-    with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_item_topic`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_item_topic')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_item_topic` (`i_id` varchar(12) NOT NULL," \
-              " `t_id` MEDIUMINT UNSIGNED NOT NULL, `year` smallint unsigned, " \
-              " primary key (i_id, t_id), index (year) )" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
-
-    connection.commit()
-    print('create table dnb_item_topic')
-
-    #######
-    # dnb_author_topic
-    #######
-    # drop table
-    with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_author_topic`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_author_topic')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_topic` (`a_id` varchar(12) NOT NULL," \
-              " `t_id` MEDIUMINT UNSIGNED NOT NULL, `count` mediumint unsigned, " \
-              " primary key (a_id, t_id))" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
-
-    connection.commit()
-    print('create table dnb_author_topic')
-
-    #######
-    # dnb_topic_topic
-    #######
-    # drop table
-    with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_topic_topic`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_topic_topic')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_topic_topic` (`t_id1` MEDIUMINT UNSIGNED NOT NULL," \
-              " `t_id2` MEDIUMINT UNSIGNED NOT NULL, `count` mediumint unsigned, " \
-              " primary key (t_id1, t_id2))" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
-
-    connection.commit()
-    print('create table dnb_topic_topic')
-
-    #######
-    # dnb_author_author
-    #######
-    # drop table
-    with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_author_author`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_author_author')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_author` (`a_id1` varchar(12) NOT NULL," \
-              " `a_id2` varchar(12) NOT NULL, `count` mediumint unsigned, " \
-              " primary key (a_id1, a_id2))" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
-
-    connection.commit()
-    print('create table dnb_topic_topic')
-
     print('open file and read line by line')
     l = 0
-    with open('export/bib-records-reduced.json', 'w+') as newFile:
+    with open('export/errorlog.txt', 'w+') as newFile:
         with open('data/bib-records.json') as f:
             # with open('export/bib-records-reduced.json') as f:
             for line in f:
                 entry = json.loads(line)
 
-                id_ = entry['003@'][0]['0'].lower()
+                j = 0
+                for i in util.seq_iter(entry):
+                    j += 1
 
-                pub_year = ''
+                if j > 2:
+                    id_ = entry['003@'][0]['0'].lower()
 
-                try:
-                    entry['011E']
-                except KeyError:
+                    pub_year = ''
+
                     try:
-                        pub_year = entry['011@'][0]['a']
+                        entry['011E']
+                    except KeyError:
+                        try:
+                            pub_year = entry['011@'][0]['a']
+                        except KeyError:
+                            pass
+                    else:
+                        try:
+                            pub_year = entry['011E'][0]['r']
+                        except KeyError:
+                            pass
+
+                    year = util.getYear(pub_year)
+
+                    title = ''
+                    tadd = ''
+                    try:
+                        entry['021A'][0]
                     except KeyError:
                         pass
-                else:
+                    else:
+                        try:
+                            title = entry['021A'][0]['a']
+                        except KeyError:
+                            pass
+                        try:
+                            tadd = entry['021A'][0]['d']
+                        except KeyError:
+                            pass
+
+                    toc = ''
                     try:
-                        pub_year = entry['011E'][0]['r']
+                        entry['047I'][0]
                     except KeyError:
                         pass
+                    else:
+                        try:
+                            toc = entry['047I'][0]['u']
+                        except KeyError:
+                            pass
 
-                year = getYear(pub_year)
-
-                title = ''
-                tadd = ''
-                try:
-                    entry['021A'][0]
-                except KeyError:
-                    pass
-                else:
+                    publisher = ''
                     try:
-                        title = entry['021A'][0]['a']
+                        entry['033A']
                     except KeyError:
                         pass
-                    try:
-                        tadd = entry['021A'][0]['d']
-                    except KeyError:
-                        pass
+                    else:
+                        va = []
+                        for i in entry['033A']:
+                            va.append({'name': i.setdefault('n', ''),
+                                       'ort': i.setdefault('p', '')})
+                        publisher = str(va)
 
-                toc = ''
-                try:
-                    entry['047I'][0]
-                except KeyError:
-                    pass
-                else:
-                    try:
-                        toc = entry['047I'][0]['u']
-                    except KeyError:
-                        pass
-
-                publisher = ''
-                try:
-                    entry['033A']
-                except KeyError:
-                    pass
-                else:
-                    va = []
-                    for i in entry['033A']:
-                        va.append({'name': i.setdefault('n', ''),
-                                   'ort': i.setdefault('p', '')})
-                    publisher = str(va)
-
-                author_ids = []
-                getAuthorId(entry, '028A', author_ids)
-                getAuthorId(entry, '028C', author_ids)
-
-                keywords = []
-
-                util.checkField(entry, '044N', ['a'], keywords, False)
-                util.checkField(entry, '044H', ['a'], keywords, False)
-                util.checkField(entry, '044K', ['a'], keywords, False)
-                util.checkField(entry, '045G', ['a'], keywords, False)
-                util.checkField(entry, '044F', ['a', 'f'], keywords, False)
-                util.checkField(entry, '045C', ['f', 'g'], keywords, False)
-                util.checkField(
-                    entry, '045E', ['e'], keywords, lookuptables.lookupSachgruppe)
-
-                util.findKeywords(keywords, entry, '041A')
-                util.findKeywords(keywords, entry, '041A/01')
-                util.findKeywords(keywords, entry, '041A/02')
-                util.findKeywords(keywords, entry, '041A/03')
-                util.findKeywords(keywords, entry, '041A/08')
-                util.findKeywords(keywords, entry, '041A/09')
-
-                # ------------------------------------
-                with connection.cursor() as cursor:
-                    # Create a new record
-                    sql = "INSERT INTO `dnb_item` (`id`, `title`, `title_add`, `year`, `toc`, publisher) " \
-                          "VALUES (%s, %s, %s, %s, %s, %s)"
-
-                    try:
-                        cursor.execute(
-                            sql, (id_, title, tadd, year, toc, publisher))
-                    # except pymysql.err.InternalError:
-                    except:
-                        newFile.write('insert into dnb_item with values')
-                        newFile.write(id_, title, tadd, year, toc, publisher)
-                        newFile.write(sys.exc_info()[0])
-                        # print('\n \n error in insert dnb_item')
-                        # print(entry)
-
-                for a_id in author_ids:
+                    # ------------------------------------
                     with connection.cursor() as cursor:
                         # Create a new record
-                        sql = "INSERT INTO `dnb_author_item` (`a_id`, `i_id`, `year`) " \
-                              "VALUES (%s, %s, %s)"
+                        sql = "INSERT INTO `dnb_item` (`id`, `title`, `title_add`, `year`, `toc`, publisher) " \
+                              "VALUES (%s, %s, %s, %s, %s, %s)"
 
                         try:
-                            cursor.execute(sql, (a_id, id_, year))
+                            cursor.execute(
+                                sql, (id_, title, tadd, year, toc, publisher))
                         # except pymysql.err.InternalError:
                         except:
+                            newFile.write('insert into dnb_item with values')
+                            err = (id_, title, tadd, year, toc, publisher)
                             newFile.write(
-                                'insert into dnb_author_item with values')
-                            newFile.write(a_id, id_, year)
-                            newFile.write(sys.exc_info()[0])
-                            # print('\n \n error in insert dnb_author_item')
+                                str(err))
+                            newFile.write(str(sys.exc_info()[0]))
+                            # print('\n \n error in insert dnb_item')
                             # print(entry)
-
-                # nicht klar obs funzt
-                if len(author_ids) > 1:
-                    i = 1
-                    for a in author_ids:
-                        if i != len(author_ids) - 1:
-                            with connection.cursor() as cursor:
-                                # Create a new record
-                                sql = "INSERT INTO `dnb_author_author` (`a_id1`, `a_id2`, `count`) " \
-                                      "VALUES (%s, %s, %s) on duplicate key update `count`=`count`+1"
-
-                                try:
-                                    cursor.execute(sql, (a, author_ids[i], 1))
-                                # except pymysql.err.InternalError:
-                                except:
-                                    newFile.write(
-                                        'insert into dnb_author_author with values')
-                                    newFile.write(a, author_ids[i])
-                                    newFile.write(sys.exc_info()[0])
-                                    # print('\n \n error in insert dnb_author_item')
-                                    # print(entry)
-                            i += 1
-
-                topic_ids = []
-                for k in keywords:
-                    with connection.cursor() as cursor:
-                        # Create a new record
-                        sql = "select `id` from `dnb_topic_count` where `keyword`=%s"
-                        cursor.execute(sql, (k))
-                        r = cursor.fetchone()
-                        if r == None:
-                            topics_without_ids.append(k)
-                        else:
-                            topic_ids.append(r['id'])
-
-                for t in topic_ids:
-                    with connection.cursor() as cursor:
-                        # Create a new record
-                        sql = "INSERT INTO `dnb_item_topic` (`i_id`, `t_id`, `year`) " \
-                              "VALUES (%s, %s, %s)"
-
-                        try:
-                            cursor.execute(sql, (id_, t, year))
-                        # except pymysql.err.InternalError:
-                        except:
-                            newFile.write(
-                                'insert into dnb_item_topic with values')
-                            newFile.write(id_, t, year)
-                            newFile.write(sys.exc_info()[0])
-                            # print('\n \n error in insert dnb_item_item')
-                            # print(sys.exc_info()[0])
-
-                for a in author_ids:
-                    for t in topic_ids:
-                        with connection.cursor() as cursor:
-                            # Create a new record
-                            sql = "INSERT INTO `dnb_author_topic` (`a_id`, `t_id`, `count`) " \
-                                  "VALUES (%s, %s, %s) on duplicate key update `count`=`count`+1"
-
-                            try:
-                                cursor.execute(sql, (a, t, 1))
-                            # except pymysql.err.InternalError:
-                            except:
-                                newFile.write(
-                                    'insert into dnb_author_topic with values')
-                                newFile.write(a, t)
-                                newFile.write(sys.exc_info()[0])
-                                # print('\n \n error in insert dnb_author_topic')
-                                # print(entry)
-
-                                # nicht klar obs funzt
-                if len(topic_ids) > 1:
-                    i = 1
-                    for t in topic_ids:
-                        if i != len(topic_ids) - 1:
-                            with connection.cursor() as cursor:
-                                # Create a new record
-                                sql = "INSERT INTO `dnb_topic_topic` (`t_id1`, `t_id2`, `count`) " \
-                                      "VALUES (%s, %s, %s) on duplicate key update `count`=`count`+1"
-
-                                try:
-                                    cursor.execute(sql, (t, topic_ids[i], 1))
-                                # except pymysql.err.InternalError:
-                                except:
-                                    newFile.write(
-                                        'insert into dnb_topic_topic with values')
-                                    newFile.write(t, topic_ids[i])
-                                    newFile.write(sys.exc_info()[0])
-                                    # print('\n \n error in insert dnb_author_item')
-                                    # print(entry)
-                            i += 1
 
                 connection.commit()
                 uptime = str(datetime.now() - startTime).split('.')[0]
                 l += 1
-                # sys.stdout.write('\033[2J\033[1;1H') # cleans complete screen
+                # sys.stdout.write('\033[2J\033[1;1H') # cleans complete
+                # screen
                 sys.stdout.write('\033[K\033[1;1H')  # cleans line
                 sys.stdout.write(
                     'File processing %s %ss %s  proccessed lines %i' % (bcolors.OKBLUE, uptime, bcolors.ENDC, l))
