@@ -1,4 +1,3 @@
-
 lookUp004B = {
     'gib': 'Bauwerk',
     'gik': 'Gebietskörperschaft, Verwaltungseinheit',
