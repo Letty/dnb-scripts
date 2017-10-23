@@ -115,10 +115,13 @@ try:
                     util.checkField(entry, '044H', ['a'], keywords, False)
                     util.checkField(entry, '044K', ['a'], keywords, False)
                     util.checkField(entry, '045G', ['a'], keywords, False)
-                    util.checkField(entry, '044F', ['a', 'f'], keywords, False)
-                    util.checkField(entry, '045C', ['f', 'g'], keywords, False)
-                    util.checkField(
-                        entry, '045E', ['e'], keywords, lookuptables.lookupSachgruppe)
+
+                    util.checkFieldDDC(entry, '045G', ['a'],
+                                       current_topics, lookuptables.lookupDDC)
+                    util.checkField(entry, '045C', ['f', 'g'],
+                                    current_topics, lookuptables.lookupSachgruppe)
+                    util.checkFieldDDC(entry, '045E', ['e'],
+                                       current_topics, lookuptables.lookupDDC)
 
                     util.findKeywords(keywords, entry, '041A')
                     util.findKeywords(keywords, entry, '041A/01')
