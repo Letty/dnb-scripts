@@ -13,7 +13,8 @@ def findKeywords(array, data, id):
             except KeyError:
                 pass
             else:
-                checkArray(array, ki['a'][0])
+                if ki['a'][0] != '':
+                    checkArray(array, ki['a'][0])
 
 
 def checkField(data, id, subfields, array, lookuptable):
@@ -35,7 +36,8 @@ def checkField(data, id, subfields, array, lookuptable):
                             name = ''
                             if lookuptable:
                                 name = lookuptable[tj]
-                            checkArray(array, name)
+                            if name != '':
+                                checkArray(array, name)
 
                     else:
                         name = ti[i]
@@ -44,7 +46,50 @@ def checkField(data, id, subfields, array, lookuptable):
                                 name = lookuptable[ti[i]]
                             except KeyError:
                                 pass
-                        checkArray(array, name)
+                        if name != '':
+                            checkArray(array, name)
+
+
+def checkFieldDDC(data, id, subfields, array, lookuptable):
+    try:
+        data[id]
+    except KeyError:
+        pass
+    else:
+        for ti in data[id]:
+            for i in subfields:
+
+                try:
+                    ti[i]
+                except KeyError:
+                    pass
+                else:
+                    if isinstance(ti[i], list):
+                        for tj in ti[i]:
+                            name = ''
+                            ddc = getDDC(tj)
+                            if ddc > 99:
+                                try:
+                                    name = lookuptable[ddc]
+                                except KeyError:
+                                    ddc = str(ddc)
+                                    id_ = ddc[0] + '' + ddc[1] + '0'
+                                    name = lookuptable[id_]
+                            if name != '':
+                                checkArray(array, name)
+
+                    else:
+                        name = ''
+                        ddc = getDDC(ti[i])
+                        if ddc > 99:
+                            try:
+                                name = lookuptable[ddc]
+                            except KeyError:
+                                ddc = str(ddc)
+                                id_ = ddc[0] + '' + ddc[1] + '0'
+                                name = lookuptable[id_]
+                        if name != '':
+                            checkArray(array, name)
 
 
 def checkArray(array, value):
@@ -72,6 +117,14 @@ def extractAuthorName(field):
 
 def getYear(st):
     p = re.findall('(\d{4})', st)
+    if (len(p) == 0):
+        return 0
+    else:
+        return int(p[0])
+
+
+def getDDC(st):
+    p = re.findall('(\d{3})', st)
     if (len(p) == 0):
         return 0
     else:
