@@ -23,7 +23,7 @@ startTime = datetime.now()
 connection = pymysql.connect(host='127.0.0.1',
                              user='root',
                              password='',
-                             db='dnb',
+                             db='dnb2',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
@@ -46,7 +46,7 @@ try:
     # create table
     with connection.cursor() as cursor:
         sql = "CREATE TABLE IF NOT EXISTS `dnb_item` (`id` varchar(12) NOT NULL," \
-              " `title` text, `title_add` text, `year` smallint unsigned, " \
+              " `title` text, `title_add` text, `year` smallint unsigned, content text," \
               " `toc` text, publisher text, primary key (id), index (year) )" \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
@@ -56,9 +56,8 @@ try:
 
     print('open file and read line by line')
     l = 0
-    with open('export/errorlog.txt', 'w+') as newFile:
-        with open('data/bib-records.json') as f:
-            # with open('export/bib-records-reduced.json') as f:
+    with open('export/errorlog-reduced.txt', 'w+') as newFile:
+        with open('export/bib-records-reduced.json') as f:
             for line in f:
                 entry = json.loads(line)
 
@@ -102,6 +101,17 @@ try:
                         except KeyError:
                             pass
 
+                    content = ''
+                    try:
+                        entry['013D'][0]
+                    except KeyError:
+                        pass
+                    else:
+                        try:
+                            content = entry['013D'][0]['a']
+                        except KeyError:
+                            pass
+
                     toc = ''
                     try:
                         entry['047I'][0]
@@ -128,12 +138,12 @@ try:
                     # ------------------------------------
                     with connection.cursor() as cursor:
                         # Create a new record
-                        sql = "INSERT INTO `dnb_item` (`id`, `title`, `title_add`, `year`, `toc`, publisher) " \
-                              "VALUES (%s, %s, %s, %s, %s, %s)"
+                        sql = "INSERT INTO `dnb_item` (`id`, `title`, `title_add`, `year`, `content`, `toc`, publisher) " \
+                              "VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
                         try:
                             cursor.execute(
-                                sql, (id_, title, tadd, year, toc, publisher))
+                                sql, (id_, title, tadd, year, content, toc, publisher))
                         # except pymysql.err.InternalError:
                         except:
                             newFile.write('insert into dnb_item with values')

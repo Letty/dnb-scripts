@@ -22,7 +22,7 @@ startTime = datetime.now()
 connection = pymysql.connect(host='127.0.0.1',
                              user='root',
                              password='',
-                             db='dnb',
+                             db='dnb2',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
@@ -73,7 +73,7 @@ try:
 
     print('open file and read line by line')
     i = 0
-    with open('export/topics_22.json') as f:
+    with open('export/topics.json') as f:
         data = json.load(f)
 
         kw = []

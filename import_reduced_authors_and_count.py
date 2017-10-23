@@ -22,7 +22,7 @@ startTime = datetime.now()
 connection = pymysql.connect(host='127.0.0.1',
                              user='root',
                              password='',
-                             db='dnb',
+                             db='dnb2',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
@@ -73,7 +73,7 @@ try:
 
     print('open file and read line by line')
 
-    with open('export/authors_22.json') as f:
+    with open('export/authors.json') as f:
         data = json.load(f)
 
         author = []
