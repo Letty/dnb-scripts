@@ -28,8 +28,8 @@ l = 0
 # Year - Author (name) - Author (id) - topics
 topics = {}
 
-with open('data/bib-records.json') as f:
-    # with open('export/bib-records-reduced.json') as f:
+# with open('data/bib-records.json') as f:
+with open('export/bib-records-reduced.json') as f:
     for line in f:
         entry = json.loads(line)
 
@@ -41,7 +41,8 @@ with open('data/bib-records.json') as f:
         # 4.350.351 ['044N'] Deskriptoren aus einem Thesaurus
         # 1.066.192 ['045C'] 2. + 3.maschinell vergebene Sachgruppen
         # 4.647.455 ['045E'] Sachgruppen der Deutschen Nationalbibliografie
-        #   110.813 ['045G'] DDC-Notation: Vollständige Notation
+        #   110.813 ['045G'] DDC-Notation: Vollständige Notation <- sachgruppen? oder ts datei mit schlagwort
+        # alternative erste drei ziffern auf die sachgruppe siehe tabelle anke
         # 2.621.471 ['041A']      1.Schlagwortfolge 1.Element
         # 2.355.042 ['041A/01']   1.Schlagwortfolge 2.Element
         # 1.556.937 ['041A/02']   1.Schlagwortfolge 3.Element
@@ -56,11 +57,14 @@ with open('data/bib-records.json') as f:
         util.checkField(entry, '044N', ['a'], current_topics, False)
         util.checkField(entry, '044H', ['a'], current_topics, False)
         util.checkField(entry, '044K', ['a'], current_topics, False)
-        util.checkField(entry, '045G', ['a'], current_topics, False)
         util.checkField(entry, '044F', ['a', 'f'], current_topics, False)
-        util.checkField(entry, '045C', ['f', 'g'], current_topics, False)
-        util.checkField(entry, '045E', ['e'],
+
+        util.checkFieldDDC(entry, '045G', ['a'],
+                           current_topics, lookuptables.lookupDDC)
+        util.checkField(entry, '045C', ['f', 'g'],
                         current_topics, lookuptables.lookupSachgruppe)
+        util.checkFieldDDC(entry, '045E', ['e'],
+                           current_topics, lookuptables.lookupDDC)
 
         util.findKeywords(current_topics, entry, '041A')
         util.findKeywords(current_topics, entry, '041A/01')
@@ -96,5 +100,5 @@ for key in seq_iter(topics):
         t[key] = topics[key]
 
 
-with open('export/topics_22.json', mode='w') as fi:
+with open('export/topics.json', mode='w') as fi:
     fi.write(json.dumps(t, indent=1, sort_keys=True))
