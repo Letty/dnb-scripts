@@ -29,7 +29,7 @@ startTime = datetime.now()
 print('open file and read line by line')
 l = 0
 author = 0
-with open('data/bib-records.json') as f:
+with open('../data/bib-records.json') as f:
     for line in f:
         entry = json.loads(line)
         #   8.675.529 ['028A'] 1.Verfasser
@@ -55,5 +55,5 @@ with open('data/bib-records.json') as f:
 
 print('\n \n finished loading dataset')
 print('Autoren ohne GND ID: %i' % (author))
-# with open('export/content.json', mode='w') as fi:
-#     fi.write(json.dumps(content, indent='\t', sort_keys='true'))
+# with open('../export/content.json', mode='w') as fi:
+#     fi.write(../json.dumps(content, indent='\t', sort_keys='true'))

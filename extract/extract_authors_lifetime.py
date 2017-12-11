@@ -18,7 +18,7 @@ class bcolors:
 
 startTime = datetime.now()
 
-with open('export/authors.json', 'r') as af:
+with open('../export/authors.json', 'r') as af:
     content = af.read()
     # print(content)
 
@@ -27,7 +27,7 @@ auth = {}
 
 print('open file and read line by line')
 l = 0
-with open('data/tp-records.json') as f:
+with open('../data/tp-records.json') as f:
     for line in f:
         entry = json.loads(line)
 
@@ -93,5 +93,5 @@ with open('data/tp-records.json') as f:
 
 print('\n \n finished loading dataset')
 
-with open('export/authors_lifetime.json', mode='w') as fi:
+with open('../export/authors_lifetime.json', mode='w') as fi:
     fi.write(json.dumps(auth, indent='\t', sort_keys='False'))

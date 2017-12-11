@@ -28,7 +28,7 @@ years = {}
 year_array = []
 
 
-with open('export/bib-records-reduced.json') as f:
+with open('../export/bib-records-reduced.json') as f:
     for line in f:
         entry = json.loads(line)
 
@@ -76,5 +76,5 @@ with open('export/bib-records-reduced.json') as f:
 
 print('\n \n finished loading dataset')
 
-with open('export/years.json', mode='w') as fi:
+with open('../export/years.json', mode='w') as fi:
     fi.write(json.dumps(years, indent='\t', sort_keys='true'))

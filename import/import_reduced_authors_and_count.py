@@ -73,7 +73,7 @@ try:
 
     print('open file and read line by line')
 
-    with open('export/authors.json') as f:
+    with open('../export/authors.json') as f:
         data = json.load(f)
 
         author = []

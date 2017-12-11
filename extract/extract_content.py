@@ -49,7 +49,7 @@ content = {
     "zweidimensionales bewegtes Bild": 0
 }
 
-with open('data/bib-records.json') as f:
+with open('../data/bib-records.json') as f:
     for line in f:
         entry = json.loads(line)
         #   2.271.910 ['002C'] Inhaltsform
@@ -80,5 +80,5 @@ with open('data/bib-records.json') as f:
         sys.stdout.flush()
 
 print('\n \n finished loading dataset')
-with open('export/content.json', mode='w') as fi:
+with open('../export/content.json', mode='w') as fi:
     fi.write(json.dumps(content, indent='\t', sort_keys='true'))

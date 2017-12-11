@@ -141,8 +141,8 @@ try:
 
     print('open file and read line by line')
     l = 0
-    with open('export/errorlog_relation_topics.txt', 'w+') as newFile:
-        with open('export/bib-records-reduced.json') as f:
+    with open('../export/errorlog_relation_topics.txt', 'w+') as newFile:
+        with open('../export/bib-records-reduced.json') as f:
             for line in f:
                 entry = json.loads(line)
 

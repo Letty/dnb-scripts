@@ -73,7 +73,7 @@ try:
 
     print('open file and read line by line')
     i = 0
-    with open('export/topics_22.json') as f:
+    with open('../export/topics_22.json') as f:
         data = json.load(f)
 
         kw = []

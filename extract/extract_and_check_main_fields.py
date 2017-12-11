@@ -26,8 +26,8 @@ l = 0
 # Year - Author (name) - Author (id) - topics
 alloc_fields = {}
 
-with open('export/bib-records-reduced.json', 'w+') as newFile:
-    with open('data/bib-records.json') as f:
+with open('../export/bib-records-reduced.json', 'w+') as newFile:
+    with open('../data/bib-records.json') as f:
         for line in f:
             entry = json.loads(line)
 
@@ -139,5 +139,5 @@ newFile.close
 
 print('\n \n finished loading dataset')
 
-with open('export/year-author-topic-matrix.json', mode='w') as fi:
+with open('../export/year-author-topic-matrix.json', mode='w') as fi:
     fi.write(json.dumps(alloc_fields, indent='\t', sort_keys='true'))
