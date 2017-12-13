@@ -2,7 +2,8 @@
 import json
 from datetime import datetime
 import sys
-import util
+sys.path.insert(1, '..')
+from lib import util
 
 
 class bcolors:
@@ -18,7 +19,7 @@ class bcolors:
 
 startTime = datetime.now()
 
-with open('../export/authors.json', 'r') as af:
+with open('../export/authors_full.json', 'r') as af:
     content = af.read()
     # print(content)
 
@@ -32,7 +33,8 @@ with open('../data/tp-records.json') as f:
         entry = json.loads(line)
 
         id_ = entry['007K'][0]['0'].lower()
-        a = {id: id_}
+
+        util.extract_author_from_field(entry, '028A', authors)
 
         try:
             entry['060R']
@@ -51,37 +53,18 @@ with open('../data/tp-records.json') as f:
                         pass
                     else:
                         if dates['4'] == 'datx':
-                            auth[id_] = {}
                             try:
                                 dates['a']
                             except KeyError:
                                 pass
                             else:
-                                auth[id_]['birth'] = dates['a']
+                                authors[id_]['birth'] = dates['a']
                             try:
                                 dates['b']
                             except KeyError:
                                 pass
                             else:
-                                auth[id_]['death'] = dates['b']
-        # lifetime
-# time = r.findall(".//*[@id='060R']", ns)
-# for t in time:
-#     lifetime = {}
-#     isLifetime = False
-#     for it in t.iter():
-#         # birth
-#         if it.get('id') == 'a':
-#             lifetime['birth'] = it.text
-#         if it.get('id') == 'b':
-#             lifetime['death'] = it.text
-#         if it.get('id') == 'v':
-#             lifetime['additional-notes'] = it.text
-#         if it.get('id') == '4' and it.text == 'datx':
-#             isLifetime = True
-
-#     if isLifetime:
-#         person['lifetime'] = lifetime
+                                authors[id_]['death'] = dates['b']
 
         uptime = str(datetime.now() - startTime).split('.')[0]
         l += 1
@@ -93,5 +76,5 @@ with open('../data/tp-records.json') as f:
 
 print('\n \n finished loading dataset')
 
-with open('../export/authors_lifetime.json', mode='w') as fi:
-    fi.write(json.dumps(auth, indent='\t', sort_keys='False'))
+with open('../export/authors_full2.json', mode='w') as fi:
+    fi.write(json.dumps(authors, indent='\t', sort_keys='False'))
