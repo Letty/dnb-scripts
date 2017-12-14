@@ -3,8 +3,8 @@ import pymysql.cursors
 import json
 from datetime import datetime
 import sys
-import util
-import lookuptables
+sys.path.insert(1, '..')
+from lib import util, lookuptables
 
 
 class bcolors:
@@ -52,32 +52,31 @@ try:
     connection.commit()
     print('create table dnb_author_item')
 
-    #######
-    # dnb_author_author
-    #######
-    # drop table
-    with connection.cursor() as cursor:
+    # #######
+    # # dnb_author_author
+    # #######
+    # # drop table
+    # with connection.cursor() as cursor:
 
-        sql = "DROP TABLE IF EXISTS `dnb_author_author`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_author_author')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_author` (`a_id1` varchar(12) NOT NULL," \
-              " `a_id2` varchar(12) NOT NULL, `count` mediumint unsigned, " \
-              " primary key (a_id1, a_id2))" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
+    #     sql = "DROP TABLE IF EXISTS `dnb_author_author`"
+    #     cursor.execute(sql)
+    # connection.commit()
+    # print('drop table dnb_author_author')
+    # # create table
+    # with connection.cursor() as cursor:
+    #     sql = "CREATE TABLE IF NOT EXISTS `dnb_author_author` (`a_id1` varchar(12) NOT NULL," \
+    #           " `a_id2` varchar(12) NOT NULL, `count` mediumint unsigned, " \
+    #           " primary key (a_id1, a_id2))" \
+    #           + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
+    #     cursor.execute(sql)
 
-    connection.commit()
-    print('create table dnb_topic_topic')
+    # connection.commit()
+    # print('create table dnb_author_author')
 
     print('open file and read line by line')
     l = 0
     with open('../export/errorlog_relation.txt', 'w+') as newFile:
         with open('../data/bib-records.json') as f:
-            # with open('../export/bib-records-reduced.json') as f:
             for line in f:
                 entry = json.loads(line)
 
@@ -109,27 +108,6 @@ try:
                     util.getAuthorId(entry, '028A', author_ids)
                     util.getAuthorId(entry, '028C', author_ids)
 
-                    keywords = []
-
-                    util.checkField(entry, '044N', ['a'], keywords, False)
-                    util.checkField(entry, '044H', ['a'], keywords, False)
-                    util.checkField(entry, '044K', ['a'], keywords, False)
-                    util.checkField(entry, '045G', ['a'], keywords, False)
-
-                    util.checkFieldDDC(entry, '045G', ['a'],
-                                       current_topics, lookuptables.lookupDDC)
-                    util.checkField(entry, '045C', ['f', 'g'],
-                                    current_topics, lookuptables.lookupSachgruppe)
-                    util.checkFieldDDC(entry, '045E', ['e'],
-                                       current_topics, lookuptables.lookupDDC)
-
-                    util.findKeywords(keywords, entry, '041A')
-                    util.findKeywords(keywords, entry, '041A/01')
-                    util.findKeywords(keywords, entry, '041A/02')
-                    util.findKeywords(keywords, entry, '041A/03')
-                    util.findKeywords(keywords, entry, '041A/08')
-                    util.findKeywords(keywords, entry, '041A/09')
-
                     # ------------------------------------
 
                     for a_id in author_ids:
@@ -150,31 +128,31 @@ try:
                                 # print('\n \n error in insert dnb_author_item')
                                 # print(entry)
 
-                    # nicht klar obs funzt
-                    if len(author_ids) > 1:
-                        i = 1
-                        for a in author_ids:
-                            if i != len(author_ids) - 1:
-                                with connection.cursor() as cursor:
-                                    # Create a new record
-                                    sql = "INSERT INTO `dnb_author_author` (`a_id1`, `a_id2`, `count`) " \
-                                          "VALUES (%s, %s, %s) on duplicate key update `count`=`count`+1"
-                                    # ON DUPLICATE KEY UPDATE
+                    # # nicht klar obs funzt
+                    # if len(author_ids) > 1:
+                    #     i = 1
+                    #     for a in author_ids:
+                    #         if i != len(author_ids) - 1:
+                    #             with connection.cursor() as cursor:
+                    #                 # Create a new record
+                    #                 sql = "INSERT INTO `dnb_author_author` (`a_id1`, `a_id2`, `count`) " \
+                    #                       "VALUES (%s, %s, %s) on duplicate key update `count`=`count`+1"
+                    #                 # ON DUPLICATE KEY UPDATE
 
-                                    try:
-                                        cursor.execute(
-                                            sql, (a, author_ids[i], 1))
-                                    # except pymysql.err.InternalError:
-                                    except:
-                                        newFile.write(
-                                            'insert into dnb_author_author with values')
-                                        err = (a, author_ids[i])
-                                        newFile.write(str(err))
-                                        newFile.write(
-                                            str(sys.exc_info()[0]))
-                                        # print('\n \n error in insert dnb_author_item')
-                                        # print(entry)
-                                i += 1
+                    #                 try:
+                    #                     cursor.execute(
+                    #                         sql, (a, author_ids[i], 1))
+                    #                 # except pymysql.err.InternalError:
+                    #                 except:
+                    #                     newFile.write(
+                    #                         'insert into dnb_author_author with values')
+                    #                     err = (a, author_ids[i])
+                    #                     newFile.write(str(err))
+                    #                     newFile.write(
+                    #                         str(sys.exc_info()[0]))
+                    #                     # print('\n \n error in insert dnb_author_item')
+                    #                     # print(entry)
+                    #             i += 1
 
                 connection.commit()
                 uptime = str(datetime.now() - startTime).split('.')[0]
