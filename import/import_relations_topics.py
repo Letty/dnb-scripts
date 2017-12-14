@@ -4,8 +4,8 @@ import json
 import re
 from datetime import datetime
 import sys
-import util
-import lookuptables
+sys.path.insert(1, '..')
+from lib import util, lookuptables
 
 
 class bcolors:
@@ -35,27 +35,6 @@ topics_lookuptable = {}
 try:
 
     #######
-    # dnb_author_item
-    #######
-    # drop table
-    with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_author_item`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_author_item')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_item` (`a_id` varchar(12) NOT NULL," \
-              " `i_id` varchar(12) NOT NULL, `year` smallint unsigned, " \
-              " primary key (a_id, i_id), index (year) )" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
-
-    connection.commit()
-    print('create table dnb_author_item')
-
-    #######
     # dnb_item_topic
     #######
     # drop table
@@ -69,7 +48,7 @@ try:
     with connection.cursor() as cursor:
         sql = "CREATE TABLE IF NOT EXISTS `dnb_item_topic` (`i_id` varchar(12) NOT NULL," \
               " `t_id` MEDIUMINT UNSIGNED NOT NULL, `year` smallint unsigned, " \
-              " primary key (i_id, t_id), index (year) )" \
+              " primary key (i_id, t_id), index (year), index (i_id), index (t_id) )" \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
 
@@ -90,7 +69,7 @@ try:
     with connection.cursor() as cursor:
         sql = "CREATE TABLE IF NOT EXISTS `dnb_author_topic` (`a_id` varchar(12) NOT NULL," \
               " `t_id` MEDIUMINT UNSIGNED NOT NULL, `count` mediumint unsigned, " \
-              " primary key (a_id, t_id))" \
+              " primary key (a_id, t_id), index (a_id), index (t_id))" \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
 
@@ -111,28 +90,7 @@ try:
     with connection.cursor() as cursor:
         sql = "CREATE TABLE IF NOT EXISTS `dnb_topic_topic` (`t_id1` MEDIUMINT UNSIGNED NOT NULL," \
               " `t_id2` MEDIUMINT UNSIGNED NOT NULL, `count` mediumint unsigned, " \
-              " primary key (t_id1, t_id2))" \
-              + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
-        cursor.execute(sql)
-
-    connection.commit()
-    print('create table dnb_topic_topic')
-
-    #######
-    # dnb_author_author
-    #######
-    # drop table
-    with connection.cursor() as cursor:
-
-        sql = "DROP TABLE IF EXISTS `dnb_author_author`"
-        cursor.execute(sql)
-    connection.commit()
-    print('drop table dnb_author_author')
-    # create table
-    with connection.cursor() as cursor:
-        sql = "CREATE TABLE IF NOT EXISTS `dnb_author_author` (`a_id1` varchar(12) NOT NULL," \
-              " `a_id2` varchar(12) NOT NULL, `count` mediumint unsigned, " \
-              " primary key (a_id1, a_id2))" \
+              " primary key (t_id1, t_id2), index (t_id1), index (t_id2))" \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
 
@@ -143,7 +101,6 @@ try:
     l = 0
     with open('../export/errorlog_relation.txt', 'w+') as newFile:
         with open('../data/bib-records.json') as f:
-            # with open('../export/bib-records-reduced.json') as f:
             for line in f:
                 entry = json.loads(line)
 
@@ -214,50 +171,6 @@ try:
                                     topic_ids.append(r['id'])
                         else:
                             topic_ids.append(topics_lookuptable[k])
-
-                    for a_id in author_ids:
-                        with connection.cursor() as cursor:
-                            # Create a new record
-                            sql = "INSERT INTO `dnb_author_item` (`a_id`, `i_id`, `year`) " \
-                                  "VALUES (%s, %s, %s)"
-
-                            try:
-                                cursor.execute(sql, (a_id, id_, year))
-                            # except pymysql.err.InternalError:
-                            except:
-                                newFile.write(
-                                    'insert into dnb_author_item with values')
-                                err = (a_id, id_, year)
-                                newFile.write(str(err))
-                                newFile.write(str(sys.exc_info()[0]))
-                                # print('\n \n error in insert dnb_author_item')
-                                # print(entry)
-
-                    # nicht klar obs funzt
-                    if len(author_ids) > 1:
-                        i = 1
-                        for a in author_ids:
-                            if i != len(author_ids) - 1:
-                                with connection.cursor() as cursor:
-                                    # Create a new record
-                                    sql = "INSERT INTO `dnb_author_author` (`a_id1`, `a_id2`, `count`) " \
-                                          "VALUES (%s, %s, %s) on duplicate key update `count`=`count`+1"
-                                    # ON DUPLICATE KEY UPDATE
-
-                                    try:
-                                        cursor.execute(
-                                            sql, (a, author_ids[i], 1))
-                                    # except pymysql.err.InternalError:
-                                    except:
-                                        newFile.write(
-                                            'insert into dnb_author_author with values')
-                                        err = (a, author_ids[i])
-                                        newFile.write(str(err))
-                                        newFile.write(
-                                            str(sys.exc_info()[0]))
-                                        # print('\n \n error in insert dnb_author_item')
-                                        # print(entry)
-                                i += 1
 
                     for t in topic_ids:
                         with connection.cursor() as cursor:
