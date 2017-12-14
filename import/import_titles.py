@@ -3,8 +3,8 @@ import pymysql.cursors
 import json
 from datetime import datetime
 import sys
-import util
-import lookuptables
+sys.path.insert(1, '..')
+from lib import util, lookuptables
 
 
 class bcolors:
@@ -58,7 +58,6 @@ try:
     l = 0
     with open('../export/errorlog.txt', 'w+') as newFile:
         with open('../data/bib-records.json') as f:
-            # with open('export/bib-records-reduced.json') as f:
             for line in f:
                 entry = json.loads(line)
 
@@ -140,26 +139,21 @@ try:
                     with connection.cursor() as cursor:
                         # Create a new record
                         sql = "INSERT INTO `dnb_item` (`id`, `title`, `title_add`, `year`, `content`, `toc`, publisher) " \
-                              "VALUES (%s, %s, %s, %s, %s, %s)"
+                              "VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
                         try:
                             cursor.execute(
                                 sql, (id_, title, tadd, year, toc, content, publisher))
-                        # except pymysql.err.InternalError:
                         except:
                             newFile.write('insert into dnb_item with values')
                             err = (id_, title, tadd, year, toc, publisher)
                             newFile.write(
                                 str(err))
                             newFile.write(str(sys.exc_info()[0]))
-                            # print('\n \n error in insert dnb_item')
-                            # print(entry)
 
                 connection.commit()
                 uptime = str(datetime.now() - startTime).split('.')[0]
                 l += 1
-                # sys.stdout.write('\033[2J\033[1;1H') # cleans complete
-                # screen
                 sys.stdout.write('\033[K\033[1;1H')  # cleans line
                 sys.stdout.write(
                     'File processing %s %ss %s  proccessed lines %i' % (bcolors.OKBLUE, uptime, bcolors.ENDC, l))

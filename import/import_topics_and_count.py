@@ -3,7 +3,8 @@ import pymysql.cursors
 import json
 from datetime import datetime
 import sys
-import util
+sys.path.insert(1, '..')
+from lib import util
 
 
 class bcolors:
@@ -41,29 +42,6 @@ try:
     # create table
     with connection.cursor() as cursor:
 
-        # * datensatz id l['003@'][0]['0'] -
-        # * gnd nummer für links ['007K'][0]['0']
-        # array: ddc notation ['037G'][index]['c'] // wie stellt man das gut dar?
-        # * Begriff ['041A']
-        # + ['041A'][0][a] Sachbegriff
-        # + ['041A'][0][g] Sachbegriff Zusatz
-        # + ['041A'][0][x] Sachbegriff Allgemeine  Unterteilung
-        #  gnd klassifikation ['042A']['a'][index]
-        # * typ ['004B'][0]['a'] .. lookup.lookUp004B[code]
-
-        # folgende verwandte begriffe wenn $4=vbal ist:
-        # array: verwandte begriffe  ['065R'] - geografikum -> das müsste theoretisch eine tabelle sein
-        # a - geografikum
-        # g - zusatz
-        # z - geografischer untertitel
-        # x - allg. untertitel
-        # 4 - komischer code für beziehung.. kackteil.. muss auch außeinandergeprökelt werden
-        # array: verwandte begriffe ['022R']  Einheitstitel - Beziehung
-        # a t g m n p s x f r k h o
-        # array: verwandte begriffe (a n g b x) ['029R'] Körperschaft - Beziehung
-        # array: verwandte begriffe (P a d n d c l) ['028R'] Person - Beziehung
-        # verwandte begriffe (a n d c g b x) ['030R'] Konferenz - Beziehung
-
         sql = "CREATE TABLE IF NOT EXISTS `dnb_topic_count` (`id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT," \
               " `keyword` TEXT, count MEDIUMINT UNSIGNED, PRIMARY KEY(id)) " \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
@@ -73,7 +51,7 @@ try:
 
     print('open file and read line by line')
     i = 0
-    with open('../export/topics_22.json') as f:
+    with open('../export/topics_full.json') as f:
         data = json.load(f)
 
         kw = []
