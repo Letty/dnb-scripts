@@ -1,0 +1,323 @@
+{
+	"003@": {
+		"array_count": 1,
+		"count": 4291830,
+		"ids": {
+			"0": {
+				"array_count": 1,
+				"count": 4291830,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"007K": {
+		"array_count": 1,
+		"count": 4291830,
+		"ids": {
+			"0": {
+				"array_count": 1,
+				"count": 4291830,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"028@": {
+		"array_count": 3,
+		"count": 1708334,
+		"ids": {
+			"4": {
+				"array_count": 5,
+				"count": 205479,
+				"is_array": true
+			},
+			"P": {
+				"array_count": 4,
+				"count": 531586,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 3565455,
+				"is_array": true
+			},
+			"c": {
+				"array_count": 5,
+				"count": 325432,
+				"is_array": true
+			},
+			"d": {
+				"array_count": 5,
+				"count": 3564029,
+				"is_array": true
+			},
+			"l": {
+				"array_count": 5,
+				"count": 263803,
+				"is_array": true
+			},
+			"n": {
+				"array_count": 5,
+				"count": 18574,
+				"is_array": true
+			}
+		},
+		"is_array": true
+	},
+	"028A": {
+		"array_count": 1,
+		"count": 4291830,
+		"ids": {
+			"P": {
+				"array_count": 3,
+				"count": 130304,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 4161526,
+				"is_array": true
+			},
+			"c": {
+				"array_count": 5,
+				"count": 157650,
+				"is_array": true
+			},
+			"d": {
+				"array_count": 5,
+				"count": 4161292,
+				"is_array": true
+			},
+			"l": {
+				"array_count": 5,
+				"count": 80801,
+				"is_array": true
+			},
+			"n": {
+				"array_count": 5,
+				"count": 4840,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"028R": {
+		"array_count": 1,
+		"count": 157836,
+		"ids": {
+			"4": {
+				"array_count": 6,
+				"count": 355143,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 6,
+				"count": 288181,
+				"is_array": true
+			},
+			"P": {
+				"array_count": 6,
+				"count": 25070,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 6,
+				"count": 330673,
+				"is_array": true
+			},
+			"c": {
+				"array_count": 6,
+				"count": 23665,
+				"is_array": true
+			},
+			"d": {
+				"array_count": 6,
+				"count": 330504,
+				"is_array": true
+			},
+			"l": {
+				"array_count": 6,
+				"count": 24994,
+				"is_array": true
+			},
+			"n": {
+				"array_count": 6,
+				"count": 3872,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"037G": {
+		"array_count": 1,
+		"count": 579,
+		"ids": {
+			"c": {
+				"array_count": 1,
+				"count": 615,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"041R": {
+		"array_count": 1,
+		"count": 2635220,
+		"ids": {
+			"4": {
+				"array_count": 5,
+				"count": 4540125,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 5,
+				"count": 3387858,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 4540193,
+				"is_array": true
+			},
+			"g": {
+				"array_count": 5,
+				"count": 20067,
+				"is_array": true
+			},
+			"x": {
+				"array_count": 5,
+				"count": 78,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"042A": {
+		"array_count": 1,
+		"count": 682717,
+		"ids": {
+			"a": {
+				"array_count": 1,
+				"count": 682722,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"042B": {
+		"array_count": 1,
+		"count": 2651696,
+		"ids": {
+			"a": {
+				"array_count": 1,
+				"count": 2651773,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"042C": {
+		"array_count": 1,
+		"count": 66039,
+		"ids": {
+			"a": {
+				"array_count": 1,
+				"count": 66039,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"050G": {
+		"array_count": 1,
+		"count": 2226317,
+		"ids": {
+			"b": {
+				"array_count": 1,
+				"count": 2327483,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"060R": {
+		"array_count": 1,
+		"count": 3251963,
+		"ids": {
+			"4": {
+				"array_count": 5,
+				"count": 3751920,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 2922431,
+				"is_array": true
+			},
+			"b": {
+				"array_count": 5,
+				"count": 1212717,
+				"is_array": true
+			},
+			"c": {
+				"array_count": 4,
+				"count": 594721,
+				"is_array": true
+			},
+			"d": {
+				"array_count": 5,
+				"count": 149410,
+				"is_array": true
+			},
+			"v": {
+				"array_count": 5,
+				"count": 110569,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"065R": {
+		"array_count": 1,
+		"count": 1212203,
+		"ids": {
+			"4": {
+				"array_count": 6,
+				"count": 1739188,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 6,
+				"count": 1447037,
+				"is_array": true
+			},
+			"Z": {
+				"array_count": 6,
+				"count": 59296,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 6,
+				"count": 1735335,
+				"is_array": true
+			},
+			"g": {
+				"array_count": 6,
+				"count": 50477,
+				"is_array": true
+			},
+			"x": {
+				"array_count": 5,
+				"count": 63,
+				"is_array": true
+			},
+			"z": {
+				"array_count": 6,
+				"count": 2829,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	}
+}

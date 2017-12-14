@@ -1,0 +1,284 @@
+{
+	"003@": {
+		"array_count": 1,
+		"count": 207866,
+		"ids": {
+			"0": {
+				"array_count": 1,
+				"count": 207866,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"004B": {
+		"array_count": 1,
+		"count": 122278,
+		"ids": {
+			"a": {
+				"array_count": 1,
+				"count": 122279,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"007K": {
+		"array_count": 1,
+		"count": 207866,
+		"ids": {
+			"0": {
+				"array_count": 1,
+				"count": 207866,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"022R": {
+		"array_count": 1,
+		"count": 141,
+		"ids": {
+			"4": {
+				"array_count": 5,
+				"count": 146,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 5,
+				"count": 146,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 15,
+				"is_array": true
+			},
+			"f": {
+				"array_count": 5,
+				"count": 5,
+				"is_array": true
+			},
+			"g": {
+				"array_count": 5,
+				"count": 10,
+				"is_array": true
+			},
+			"n": {
+				"array_count": 5,
+				"count": 5,
+				"is_array": true
+			},
+			"p": {
+				"array_count": 5,
+				"count": 21,
+				"is_array": true
+			},
+			"t": {
+				"array_count": 5,
+				"count": 146,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"028R": {
+		"array_count": 1,
+		"count": 2297,
+		"ids": {
+			"4": {
+				"array_count": 5,
+				"count": 2546,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 5,
+				"count": 2437,
+				"is_array": true
+			},
+			"P": {
+				"array_count": 5,
+				"count": 427,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 2119,
+				"is_array": true
+			},
+			"c": {
+				"array_count": 5,
+				"count": 86,
+				"is_array": true
+			},
+			"d": {
+				"array_count": 5,
+				"count": 2106,
+				"is_array": true
+			},
+			"l": {
+				"array_count": 5,
+				"count": 249,
+				"is_array": true
+			},
+			"n": {
+				"array_count": 5,
+				"count": 100,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"029R": {
+		"array_count": 1,
+		"count": 2988,
+		"ids": {
+			"4": {
+				"array_count": 5,
+				"count": 3180,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 5,
+				"count": 3065,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 3180,
+				"is_array": true
+			},
+			"b": {
+				"array_count": 5,
+				"count": 88,
+				"is_array": true
+			},
+			"g": {
+				"array_count": 5,
+				"count": 1299,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"030R": {
+		"array_count": 1,
+		"count": 10,
+		"ids": {
+			"4": {
+				"array_count": 6,
+				"count": 10,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 6,
+				"count": 10,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 6,
+				"count": 10,
+				"is_array": true
+			},
+			"c": {
+				"array_count": 6,
+				"count": 4,
+				"is_array": true
+			},
+			"d": {
+				"array_count": 6,
+				"count": 4,
+				"is_array": true
+			},
+			"n": {
+				"array_count": 6,
+				"count": 1,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"037G": {
+		"array_count": 1,
+		"count": 137256,
+		"ids": {
+			"c": {
+				"array_count": 1,
+				"count": 200441,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"041A": {
+		"array_count": 1,
+		"count": 207866,
+		"ids": {
+			"a": {
+				"array_count": 3,
+				"count": 207866,
+				"is_array": true
+			},
+			"g": {
+				"array_count": 3,
+				"count": 27147,
+				"is_array": true
+			},
+			"x": {
+				"array_count": 3,
+				"count": 10907,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	},
+	"042A": {
+		"array_count": 1,
+		"count": 207863,
+		"ids": {
+			"a": {
+				"array_count": 1,
+				"count": 207863,
+				"is_array": false
+			}
+		},
+		"is_array": false
+	},
+	"065R": {
+		"array_count": 1,
+		"count": 9693,
+		"ids": {
+			"4": {
+				"array_count": 5,
+				"count": 11321,
+				"is_array": true
+			},
+			"9": {
+				"array_count": 5,
+				"count": 11158,
+				"is_array": true
+			},
+			"a": {
+				"array_count": 5,
+				"count": 11321,
+				"is_array": true
+			},
+			"g": {
+				"array_count": 5,
+				"count": 633,
+				"is_array": true
+			},
+			"x": {
+				"array_count": 5,
+				"count": 8,
+				"is_array": true
+			},
+			"z": {
+				"array_count": 5,
+				"count": 268,
+				"is_array": true
+			}
+		},
+		"is_array": false
+	}
+}
