@@ -2,8 +2,8 @@
 import json
 from datetime import datetime
 import sys
-import util
-import lookuptables
+sys.path.insert(1, '..')
+from lib import util, lookuptables
 
 
 def seq_iter(obj):
@@ -25,11 +25,10 @@ startTime = datetime.now()
 
 print('open file and read line by line')
 l = 0
-# Year - Author (name) - Author (id) - topics
 topics = {}
 
-# with open('../data/bib-records.json') as f:
-with open('../export/bib-records-reduced.json') as f:
+with open('../data/bib-records.json') as f:
+    # with open('../export/bib-records-reduced.json') as f:
     for line in f:
         entry = json.loads(line)
 
@@ -73,10 +72,6 @@ with open('../export/bib-records-reduced.json') as f:
         util.findKeywords(current_topics, entry, '041A/08')
         util.findKeywords(current_topics, entry, '041A/09')
 
-        # Wie geh ich hier mit komischen Abkürzungen um? ggf einfach
-        # ignorieren und in Text umwandeln?
-        # Die DDC und GND Coding Liste müsste man dafür aufschlüsseln
-
         for cp in current_topics:
             try:
                 topics[cp]
@@ -100,5 +95,5 @@ for key in seq_iter(topics):
         t[key] = topics[key]
 
 
-with open('../export/topics.json', mode='w') as fi:
+with open('../export/topics_full.json', mode='w') as fi:
     fi.write(json.dumps(t, indent=1, sort_keys=True))
