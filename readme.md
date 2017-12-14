@@ -1,13 +1,40 @@
 #Datenbank Infos
 
+## Datenanalyse
+
+Ordner: analysis
+* fieldsandids.py ist das Skript zur Analyse
+* Analyse kann auf dem Gesamtbestand, sowie auf den Daten der GND laufen
+* Anpassung des scriptes und des outputs ist im Skript enthalten
+
+Output des Scripts:
+
+```
+"feldbezeichner":{
+    array_count: wenn es ein Array ist, maximale Länge,
+    is_array: gibt an, ob das Feld ein Array ist,
+    count: die Häufigkeit des Feldbezeichners in den Werken,
+    "weitere_ids": {
+        // selbe datenstruktur
+    }
+}
+```
+
 ## Extraktion der relevanten Daten für die Datenbank
 
+Ordner: extract
 Reihenfolge der Scripte:
 
 1. `extract_and_check_main_fields.py` - wenn man nur den kleinen Datensatz will
 2. `extract_authors.py` - alle Autoren der Werke 
 3. `extract_authors_lifetime.py` - fügt den Autoren die Lebensdaten hinzu 
 4. `extract_topics.py` - alle Themen der Werke 
+
+## Datenbankimporte
+
+Ordner: import
+Reihenfolge der Scripte:
+
 5. `import_authors_and_count.py` - Autoren Aufschlüsselung
 6. `import_topics_and_count.py` - alle Themen aufschlüsseln
 7. `import_titles.py` - alle werke hinzufügen
