@@ -45,7 +45,7 @@ try:
     with connection.cursor() as cursor:
         sql = "CREATE TABLE IF NOT EXISTS `dnb_author_item` (`a_id` varchar(12) NOT NULL," \
               " `i_id` varchar(12) NOT NULL, `year` smallint unsigned, " \
-              " primary key (a_id, i_id), index (year) )" \
+              " primary key (a_id, i_id), index (year), index (a_id), index (i_id) )" \
               + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
         cursor.execute(sql)
 
@@ -66,7 +66,7 @@ try:
     # with connection.cursor() as cursor:
     #     sql = "CREATE TABLE IF NOT EXISTS `dnb_author_author` (`a_id1` varchar(12) NOT NULL," \
     #           " `a_id2` varchar(12) NOT NULL, `count` mediumint unsigned, " \
-    #           " primary key (a_id1, a_id2))" \
+    #           " primary key (a_id1, a_id2), index (a_id1), index (a_id2))" \
     #           + "ENGINE=InnoDB DEFAULT CHARSET=utf8"
     #     cursor.execute(sql)
 
