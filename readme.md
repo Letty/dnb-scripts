@@ -1,4 +1,4 @@
-#Datenbank Infos
+# Datenbank Infos
 
 ## Datenanalyse
 
@@ -43,7 +43,6 @@ Reihenfolge der Scripte:
 10. `import_relations_topics.py` - alle Relationen mit Themen
 
 ## Auswertung der Datenstruktur
-
 
 
 ```
